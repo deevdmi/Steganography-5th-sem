@@ -1,0 +1,66 @@
+Sub CheckFormattingAndCreateCode()
+    Dim doc As Document
+    Set doc = Documents.Open("C:\Users\Дмитрий\OneDrive\Рабочий стол\ММСМИ\Лабораторная работа 2\контейнер 10 вар\9.docx")
+    
+    Dim isFirstLine As Boolean
+    Dim currentSymbol As String
+    isFirstLine = True
+    
+    Dim filePath As String
+    Dim fileContent As String
+    Dim fileNo As Integer
+    
+    Dim c As Integer
+    
+    'Считывает битовую строку из файла в переменную
+    filePath = "C:\Users\Дмитрий\OneDrive\Рабочий стол\ММСМИ\Лабораторная работа 2\output.txt"
+    fileNo = FreeFile
+    Open filePath For Input As fileNo
+    fileContent = Input$(LOF(fileNo), #fileNo)
+    Close fileNo
+    
+    'Считывает вариант форматирования из файла в переменную
+    filePath = "C:\Users\Дмитрий\OneDrive\Рабочий стол\ММСМИ\Лабораторная работа 2\TypeForm.txt"
+    fileNo = FreeFile
+    Open filePath For Input As fileNo
+    tf = Input$(LOF(fileNo), #fileNo)
+    Close fileNo
+    
+    c = 1
+    For Each symb In doc.Characters
+        symb.Font.Name = "Segoe Print"
+        currentSymbol = symb
+        If isFirstLine Then
+            If currentSymbol = vbCr Then
+                isFirstLine = False
+            End If
+        Else
+            If tf = 1 Then
+                If Mid(fileContent, c, 1) = 0 Then
+                    symb.Font.Color = symb.Font.Color - 1
+                End If
+            ElseIf tf = 2 Then
+                If Mid(fileContent, c, 1) = 0 Then
+                    symb.Font.Shading.BackgroundPatternColor = RGB(250, 250, 250)
+                End If
+            ElseIf tf = 3 Then
+                If Mid(fileContent, c, 1) = 0 Then
+                    symb.Font.Size = symb.Font.Size - 0.5
+                End If
+            ElseIf tf = 4 Then
+                If Mid(fileContent, c, 1) = 0 Then
+                    symb.Font.Scaling = symb.Font.Scaling - 1
+                End If
+            ElseIf tf = 5 Then
+                If Mid(fileContent, c, 1) = 0 Then
+                    symb.Font.Spacing = symb.Font.Spacing - 0.1
+                End If
+            End If
+            c = c + 1
+            
+        End If
+    
+    Next symb
+
+End Sub
+
